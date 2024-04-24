@@ -11,7 +11,7 @@
     <p>Минимальный депозит клиента - {{ bank.min_client_deposit }}</p>
     <p>Бухгалтеры банка </p>
     {% for acc in bank.accountants.all %}
-        {{acc.name}}
+        {{ acc.user.username }}
     {% endfor %}
     </p>
 </body>

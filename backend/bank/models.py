@@ -12,35 +12,28 @@ class Bank(models.Model):
         return self.name
 
 
-class BankUsers(models.Model):
-    user = models.ForeignKey(CustomUser, on_delete=models.CASCADE, related_name='user_banks')
-    bank = models.ForeignKey(Bank, on_delete=models.CASCADE, related_name='bank_users')
+class Director(models.Model):
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='director')
+    bank = models.ForeignKey(to=Bank, on_delete=models.CASCADE, related_name='directors', null=True, blank=True)
 
 
 class Accountant(models.Model):
-    name = models.CharField(verbose_name='Name of the accountant', max_length=200)
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='accountant')
     salary = models.IntegerField(verbose_name='Salary', default=0)
-    bank = models.ForeignKey(
-        Bank,
-        verbose_name='Bank of the accountant',
-        on_delete=models.CASCADE,
-        related_name='accountants'
-    )
+    bank = models.ForeignKey(to=Bank, on_delete=models.CASCADE, related_name='accountants', null=True, blank=True)
 
 
 class Manager(models.Model):
-    name = models.CharField(verbose_name='Name of the manager', max_length=200)
-    salary = models.IntegerField(verbose_name='Salary', default=200)
-    bank = models.ForeignKey(Bank, verbose_name='Bank of the manager',
-                             on_delete=models.CASCADE, related_name='manager')
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='manager')
+    salary = models.IntegerField(verbose_name='Salary', default=0)
     accountant = models.ForeignKey(Accountant, verbose_name='Accountant of the manager',
                                    on_delete=models.CASCADE, related_name='managers')
+    bank = models.ForeignKey(to=Bank, on_delete=models.CASCADE, related_name='managers', null=True, blank=True)
 
 
 class Client(models.Model):
-        name = models.CharField(verbose_name="Name of the client", max_length=200)
-        money = models.IntegerField(verbose_name='Money', default=10000)
-        manager = models.ForeignKey(Manager, verbose_name='Manager of the client',
-                                    on_delete=models.CASCADE, related_name='clients')
-        bank = models.ForeignKey(Bank, verbose_name='Bank of the client',
-                                 on_delete=models.CASCADE, related_name='clients')
+    user = models.OneToOneField(CustomUser, on_delete=models.CASCADE, related_name='client')
+    money = models.IntegerField(verbose_name='Salary', default=0)
+    manager = models.ForeignKey(Manager, verbose_name='Accountant of the manager',
+                                on_delete=models.CASCADE, related_name='clients')
+    bank = models.ForeignKey(to=Bank, on_delete=models.CASCADE, related_name='clients', null=True, blank=True)
